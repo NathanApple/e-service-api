@@ -14,7 +14,7 @@ class AddForeignToReviewsTable extends Migration
     public function up()
     {
         Schema::table('reviews', function (Blueprint $table) {
-            $table->foreign('transaction_id')->on('transaction')
+            $table->foreign('transaction_id')->on('transactions')
             ->references('id')
             ->onDelete('cascade')->onUpdate('cascade');
         });

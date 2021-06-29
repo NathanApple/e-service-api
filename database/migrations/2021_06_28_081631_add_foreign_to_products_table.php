@@ -18,11 +18,15 @@ class AddForeignToProductsTable extends Migration
             ->references('id')
             ->onDelete('set null')->onUpdate('cascade');
 
+            // $table->foreign('category_id')->on('categories')
+            // ->references('id')
+            // ->onDelete('set null')->onUpdate('cascade');
+
             $table->foreign('category_id')->on('categories')
             ->references('id')
             ->onDelete('set null')->onUpdate('cascade');
         });
-    }
+    } 
 
     /**
      * Reverse the migrations.
