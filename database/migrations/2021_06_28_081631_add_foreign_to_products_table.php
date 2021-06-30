@@ -14,7 +14,7 @@ class AddForeignToProductsTable extends Migration
     public function up()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->foreign('seller_id')->on('sellers')
+            $table->foreign('merchant_id')->on('merchants')
             ->references('id')
             ->onDelete('set null')->onUpdate('cascade');
 
