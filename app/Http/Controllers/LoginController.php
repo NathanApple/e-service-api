@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class LoginController extends Controller
@@ -11,5 +12,15 @@ class LoginController extends Controller
         return response()->json(compact('token'));
     }
 
-    
+    public function register(Request $request){
+        $user = new User();
+
+        $user->name= $request->name;
+        $user->email= $request->email;
+        $user->password= app('hash')->make($request->password);
+        $user->save();
+      
+       return response()->json(compact('user'));
+    }
+
 }

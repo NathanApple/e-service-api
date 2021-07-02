@@ -2,23 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ServiceTransaction;
+use App\Models\Transaction;
 use Exception;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class ServiceTransactionController extends Controller
+class TransactionController extends Controller
 {
-
     public function view_start_transaction(Request $request){
         return view('form_start_transaction');
 
     }
 
     public function start_transaction(Request $request){
-        $transaction = new ServiceTransaction();
+        $transaction = new Transaction();
 
         $transaction->user_id = $request->user_id;
         $transaction->service_id = $request->service_id;
@@ -28,14 +26,14 @@ class ServiceTransactionController extends Controller
 
         $transaction->save();
 
-        return dump($transaction);
+        return response()->json(compact('transaction'));
         
     }
 
     public function accept_transaction(Request $request, $id){
 
         // Note ini pake $id untuk mempercepat testing
-        $transaction = ServiceTransaction::findOrFail($id);
+        $transaction = Transaction::findOrFail($id);
 
         if ($transaction->order_id == null){
             $uuid = Uuid::uuid4()->toString();
@@ -58,18 +56,25 @@ class ServiceTransactionController extends Controller
 
             // 400 : OrderId sudah pernah dipakai sebelumnya
             if ($e->getCode() == '400'){   
-                return 'Transaksi telah dilakukan ( Sudah dibayar )';
+                return response()->json([
+                    'message' => 'Transaksi telah dilakukan atau OrderId telah dipakai sebelumnya '
+                ], 400);
             }
-            return dump($e);
+
+            $message = $e->getMessage();
+            Log::debug('Error when accept transaction : '.$message);
+            return response()->json([
+                'message' => "Unknown Error, please contact developer, error : $message"
+            ], $e->getCode());
         }
 
         // return dump($snapToken);
-        return view('transaction_integration', compact('snapToken', 'transaction'));
+        return response()->json(compact('snapToken', 'transaction'));
         
     }
 
     public function check_transaction(Request $request, $id){
-        $transaction = ServiceTransaction::where('order_id', $id)->first();
-        return dump($transaction);
+        $transaction = Transaction::where('order_id', $id)->first();
+        return response()->json(compact('transaction'));
     }
 }
