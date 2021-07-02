@@ -10,16 +10,13 @@ use Ramsey\Uuid\Uuid;
 
 class TransactionController extends Controller
 {
-    public function view_start_transaction(Request $request){
-        return view('form_start_transaction');
+    public function start_negotiable_transaction(Request $request){
 
-    }
-
-    public function start_transaction(Request $request){
+        // TODO : Validate, if the current user is the owner of the product
         $transaction = new Transaction();
 
-        $transaction->user_id = $request->user_id;
-        $transaction->service_id = $request->service_id;
+        $transaction->user_id = $request->buyer_user_Id;
+        $transaction->product_id = $request->product_id;
         $transaction->price = $request->price;
         $transaction->transaction_status = 'Not Confirmed';
         
@@ -30,10 +27,11 @@ class TransactionController extends Controller
         
     }
 
-    public function accept_transaction(Request $request, $id){
+    public function accept_transaction(Request $request){
 
         // Note ini pake $id untuk mempercepat testing
-        $transaction = Transaction::findOrFail($id);
+        // TODO : Check user not confirmed transaction
+        $transaction = Transaction::findOrFail($request->transaction_id);
 
         if ($transaction->order_id == null){
             $uuid = Uuid::uuid4()->toString();

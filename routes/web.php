@@ -30,10 +30,14 @@ $router->group(['prefix'=>'api'], function() use ($router){
     
             });
 
+            $router->group(['prefix'=>'nego_transaction'], function() use ($router){
+    
+                $router->post('start', 'TransactionController@start_negotiable_transaction');
+
+            });
+
             $router->group(['prefix'=>'transaction'], function() use ($router){
     
-                $router->post('start', 'TransactionController@start_transaction');
-
             });
 
 
@@ -42,17 +46,21 @@ $router->group(['prefix'=>'api'], function() use ($router){
         // For user
         $router->group(['prefix'=>'user'], function() use ($router){
             
-            $router->group(['prefix'=>'transaction'], function() use ($router){
+            $router->group(['prefix'=>'nego_transaction'], function() use ($router){
 
-                $router->post('start', 'TransactionController@accept_transaction');
+                $router->post('accept', 'TransactionController@accept_transaction');
     
             });
 
         });
 
-        $router->post('login', 'LoginController@login');
-
+        
     });
+
+    // Auth
+    $router->post('login', 'LoginController@login');
+    $router->post('register', 'LoginController@register');
+
 });
 
 
