@@ -35,6 +35,8 @@ $router->group(['prefix'=>'api'], function() use ($router){
                 
             $router->group(['prefix'=>'merchant'], function() use ($router){
         
+                $router->get('/', 'MerchantController@check');
+
                 $router->group(['prefix'=>'product'], function() use ($router){
         
                     $router->post('create', 'ProductController@create');
@@ -58,6 +60,8 @@ $router->group(['prefix'=>'api'], function() use ($router){
         // For user
         $router->group(['prefix'=>'user'], function() use ($router){
             
+            $router->get('/', 'UserController@check');
+
             $router->group(['prefix'=>'nego_transaction'], function() use ($router){
 
                 $router->post('accept', 'TransactionController@accept_transaction');
