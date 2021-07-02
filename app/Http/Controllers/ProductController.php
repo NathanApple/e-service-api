@@ -11,7 +11,8 @@ class ProductController extends Controller
     public function create(Request $request){
         // $user_id = Auth::user()->id;
         // TODO : Get merchant id from Token
-        $merchant_id = '1';
+        
+        $merchant_id = $request->merchant->id;
         $product = new Product();
 
         $product->merchant_id = $merchant_id;

@@ -23,4 +23,12 @@ class LoginController extends Controller
        return response()->json(compact('user'));
     }
 
+
+    public function test(Request $request){
+
+        // return response()->json('Hello worlddddd');
+        return dump($request->merchant->id);
+        // return response()->json(compact('request'));
+    }
+
 }

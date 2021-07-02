@@ -17,29 +17,41 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
+$router->group(['prefix'=>'test'], function() use ($router){
+    $router->group(['middleware' => 'merchant'], function() use ($router){
+
+        $router->post('merchant', 'LoginController@test');
+
+
+    });
+});
+
+
 $router->group(['prefix'=>'api'], function() use ($router){
 
     $router->group(['middleware' => 'auth'], function() use ($router){
     
-        // TODO middleware for merchant role
-        $router->group(['prefix'=>'merchant'], function() use ($router){
-    
-            $router->group(['prefix'=>'product'], function() use ($router){
-    
-                $router->post('create', 'ProductController@create');
-    
+        $router->group(['middleware' => 'merchant'], function() use ($router){
+                
+            $router->group(['prefix'=>'merchant'], function() use ($router){
+        
+                $router->group(['prefix'=>'product'], function() use ($router){
+        
+                    $router->post('create', 'ProductController@create');
+        
+                });
+
+                $router->group(['prefix'=>'nego_transaction'], function() use ($router){
+        
+                    $router->post('start', 'TransactionController@start_negotiable_transaction');
+
+                });
+
+                $router->group(['prefix'=>'transaction'], function() use ($router){
+        
+                });
+
             });
-
-            $router->group(['prefix'=>'nego_transaction'], function() use ($router){
-    
-                $router->post('start', 'TransactionController@start_negotiable_transaction');
-
-            });
-
-            $router->group(['prefix'=>'transaction'], function() use ($router){
-    
-            });
-
 
         });
 
